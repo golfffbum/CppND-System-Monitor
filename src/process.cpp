@@ -18,13 +18,13 @@ int Process::Pid() { return pid_; }
 float Process::CpuUtilization() {
   long utime, stime, cutime, cstime, starttime;
   float hertz = sysconf(_SC_CLK_TCK);
-  //proc/uptime 
   long uptime = LinuxParser::UpTime();
-  //proc/pid/stat
+
+  // get and set stat data
   vector<string> stat = LinuxParser::GetPidStatData(pid_);
   utime = stol(stat[13]);
   stime = stol(stat[14]);
-  cutime = stol(stat[15]);  
+  cutime = stol(stat[15]); 
   cstime = stol(stat[16]);
   starttime = stol(stat[21]);
   
@@ -50,12 +50,10 @@ string Process::Ram() { return ram_; }
 // Return the user (name) that generated this process
 string Process::User() { return user_; }
 
-// TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { uptime_; }
+// Return the age of this process (in seconds)
+long int Process::UpTime() { return uptime_; }
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
+// Overload the "greater than" comparison operator for Process objects
 bool Process::operator>(Process const& a) const { 
    return cpu_usage_ > a.cpu_usage_;
-//   return true; 
 }

@@ -32,7 +32,7 @@ int GetMemInfoFromKey(std::string desiredKey);
 std::vector<long> GetJiffies();
 std::string GetPidStatusData(int pid, std::string desiredKey);
 std::vector<std::string> GetPidStatData(int pid);
-  
+
 // CPU
 enum CPUStates {
   kUser_ = 0,
@@ -46,10 +46,9 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-// std::vector<std::string> CpuUtilization();
+
 long Jiffies();
 long ActiveJiffies();
-// long ActiveJiffies(int pid);
 long IdleJiffies();
 
 // Processes
