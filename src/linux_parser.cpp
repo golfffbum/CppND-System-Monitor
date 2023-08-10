@@ -121,27 +121,37 @@ long LinuxParser::Jiffies() {
   //   Idle = idle + iowait
   //   NonIdle = user + nice + system + irq + softirq + steal
 
-  long total;
+  long total = 0;
   vector<long> jiffies = GetJiffies();
   
-  // sum all the jiffes together
-  for (int state = kUser_; state <= kGuestNice_; ++state) {
-    total += jiffies[state];
+  if (!jiffies.empty())
+  {
+    // sum all the jiffes together
+    for (int state = kUser_; state <= kGuestNice_; ++state) {
+      total += jiffies[state];
+    }
+    return total;
   }
+
   return total;
 }
 
 // Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
-  long total;
+  long total = 0;
   vector<long> jiffies = GetJiffies();
   
-  // sum all the jiffes together
-  for (int state = kUser_; state <= kGuestNice_; ++state) {
-    total += jiffies[state];
+  if (!jiffies.empty())
+  {
+    // sum all the jiffes together
+    for (int state = kUser_; state <= kGuestNice_; ++state) {
+      total += jiffies[state];
+    }
+    //subtract the idle jiffies to get the active 
+    return total - jiffies[kIdle_] - jiffies[kIOwait_];
   }
-  //subtract the idle jiffies to get the active 
-  return total - jiffies[kIdle_] - jiffies[kIOwait_];
+
+  return total;
 }
 
 // Read and return the number of idle jiffies for the system
@@ -198,6 +208,7 @@ string LinuxParser::User(int pid) {
     std::istringstream linestream(line);
     while(linestream >> user >> x >> id){
       if(id == uid){
+        user.resize(6);
         return user;
       }
     }

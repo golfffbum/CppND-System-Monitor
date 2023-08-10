@@ -17,8 +17,8 @@ class Process {
       uid_ = LinuxParser::Uid(pid_);
       user_ = LinuxParser::User(pid_);
       uptime_ = LinuxParser::UpTime(pid_);
-      
     }
+
   int Pid();                             
   std::string User();                    
   std::string Command();                 

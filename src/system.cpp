@@ -18,10 +18,14 @@ Processor& System::Cpu() { return cpu_; }
 
 // Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
+
+  // clear processes list to rebuild
+  processes_.clear();
+
   vector<int> pids = LinuxParser::Pids();
   for (int p : pids)
   {
-    processes_.emplace_back(Process(p));
+    processes_.push_back(Process(p));
   }
   
   // set cpu usage 
