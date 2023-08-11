@@ -1,9 +1,9 @@
 #include "processor.h"
 
 // Return the aggregate CPU utilization
-float Processor::Utilization() { 
+double Processor::Utilization() { 
   long total, idle, totalD, idleD;
-  float cpuPercent = 0.0;
+  double cpuPercent = 0.0;
   
   // get current
   total = LinuxParser::Jiffies();
@@ -16,7 +16,7 @@ float Processor::Utilization() {
   //   CPU_Percentage = (totald - idled)/totald
   if (totalD != 0)
   {
-    cpuPercent = static_cast<float>(totalD - idleD) / totalD; 
+    cpuPercent = static_cast<double>(totalD - idleD) / totalD; 
   }
   
   // save previous 

@@ -31,11 +31,22 @@ vector<Process>& System::Processes() {
   // set cpu usage 
   for (auto process : processes_)
   {
-    process.CpuUtilization();
+    process.SetCpuUtilization();
   }
   
   // sort processes
-  std::sort(processes_.begin(), processes_.end(), std::greater<Process>());
+  //use lambda, [capture list](parameters){ function body}
+    // capture list []: what oustide variable are accessible in the lambda function
+    // params (): decalre paramters the lambda function will take in 
+    // function body {}: the actual code the function will execute
+  sort(
+      processes_.begin(),
+      processes_.end(),
+      []
+      (const Process a, const Process b)
+      {return a > b;}
+    );
+
   return processes_; 
 }
 

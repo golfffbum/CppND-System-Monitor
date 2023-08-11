@@ -14,11 +14,11 @@ using std::stof;
 // Return this process's ID
 int Process::Pid() { return pid_; }
 
-// Return this process's CPU utilization
-float Process::CpuUtilization() {
-  long utime, stime, cutime, cstime, starttime;
-  float hertz = sysconf(_SC_CLK_TCK);
-  long uptime = LinuxParser::UpTime();
+// Set this process's CPU utilization
+double Process::SetCpuUtilization() {
+  double utime, stime, cutime, cstime, starttime;
+  double hertz = sysconf(_SC_CLK_TCK);
+  double uptime = LinuxParser::UpTime();
 
   // get and set stat data
   vector<string> stat = LinuxParser::GetPidStatData(pid_);
@@ -29,16 +29,21 @@ float Process::CpuUtilization() {
   starttime = stol(stat[21]);
   
   // get total = utime + stime + cutime + cstime
-  long totaltime = utime + stime + cutime + cstime;
+  double totaltime = utime + stime + cutime + cstime;
   // get elapsed time
-  float seconds = uptime - (starttime / hertz);
+  double seconds = uptime - (starttime / hertz);
   // convert to percentage
-  float cpu_usage = 100 * ((totaltime / hertz) / seconds);
+  double cpu_usage = 100 * ((totaltime / hertz) / seconds);
   
   //update member var 
   cpu_usage_ = cpu_usage;
   
   return cpu_usage; 
+}
+
+// Return this process's CPU utilization
+double Process::CpuUtilization() {
+  return cpu_usage_;
 }
 
 // Return the command that generated this process

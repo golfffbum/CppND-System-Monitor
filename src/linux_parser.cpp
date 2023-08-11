@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #include "linux_parser.h"
 
@@ -50,20 +51,18 @@ string LinuxParser::Kernel() {
 // BONUS: Update this to use std::filesystem
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
-  DIR* directory = opendir(kProcDirectory.c_str());
-  struct dirent* file;
-  while ((file = readdir(directory)) != nullptr) {
+  for (const auto& entry : std::filesystem::directory_iterator(kProcDirectory)) {
     // Is this a directory?
-    if (file->d_type == DT_DIR) {
-      // Is every character of the name a digit?
-      string filename(file->d_name);
+    if(entry.is_directory()) {
+      //Is every character of the name a digit? 
+      std::string filename = entry.path().filename();
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        int pid = stoi(filename);
+        int pid = std::stoi(filename);
         pids.push_back(pid);
       }
     }
   }
-  closedir(directory);
+
   return pids;
 }
 
@@ -186,7 +185,7 @@ string LinuxParser::Command(int pid) {
 
 // Read and return the memory used by a process
 string LinuxParser::Ram(int pid) { 
-  string value = GetPidStatusData(pid, "VmSize");  
+  string value = GetPidStatusData(pid, "VmData");  
   int mB = stoi(value) / 1000;
   return std::to_string(mB);
 }
